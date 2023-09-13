@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 from PyQt5.QtCore import Qt
 
-import cheker
+ISMIS = 0
 
 class Ui_UniLog(object):
     def setupUi(self, UniLog):
@@ -16,7 +16,7 @@ class Ui_UniLog(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, 901, 581))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("image/Main.png")) 
+        self.label.setPixmap(QtGui.QPixmap("image/Main.png"))
         self.label.setObjectName("label")
         self.label2 = QtWidgets.QLabel(self.centralwidget)
         self.label2.setGeometry(QtCore.QRect(240, 20, 141, 171))
@@ -35,11 +35,11 @@ class Ui_UniLog(object):
         self.Uploadbtn.setFont(font)
         self.Uploadbtn.setToolTip("")
         self.Uploadbtn.setStyleSheet("font: 75 12pt \"Calibri\";\n"
-"background-color: rgb(106, 128, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"font: 75 16pt \"Inder\";\n"
-"border: none;\n"
-"border-radius: 10px;")
+                                     "background-color: rgb(106, 128, 255);\n"
+                                     "color: rgb(255, 255, 255);\n"
+                                     "font: 75 16pt \"Inder\";\n"
+                                     "border: none;\n"
+                                     "border-radius: 10px;")
         self.Uploadbtn.setCheckable(False)
         self.Uploadbtn.setObjectName("Uploadbtn")
         self.ListenFolder = QtWidgets.QPushButton(self.centralwidget)
@@ -54,13 +54,24 @@ class Ui_UniLog(object):
         self.ListenFolder.setFont(font)
         self.ListenFolder.setToolTip("")
         self.ListenFolder.setStyleSheet("font: 75 12pt \"Calibri\";\n"
-"background-color: rgb(106, 128, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"font: 75 16pt \"Inder\";\n"
-"border: none;\n"
-"border-radius: 10px;")
+                                        "background-color: rgb(106, 128, 255);\n"
+                                        "color: rgb(255, 255, 255);\n"
+                                        "font: 75 16pt \"Inder\";\n"
+                                        "border: none;\n"
+                                        "border-radius: 10px;")
         self.ListenFolder.setCheckable(False)
         self.ListenFolder.setObjectName("ListenFolder")
+        self.Missing_Count = QtWidgets.QLabel(self.centralwidget)
+        self.Missing_Count.setGeometry(QtCore.QRect(260, 100, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Inder")
+        font.setPointSize(29)
+        self.Missing_Count.setFont(font)
+        self.Missing_Count.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.Missing_Count.setStyleSheet("color: rgb(255, 188, 7);\n""")
+        self.Missing_Count.setAlignment(QtCore.Qt.AlignCenter)
+        self.Missing_Count.setObjectName("Missing_Count")
+        self.Missing_Count.raise_()
         UniLog.setCentralWidget(self.centralwidget)
         self.retranslateUi(UniLog)
         QtCore.QMetaObject.connectSlotsByName(UniLog)
@@ -70,6 +81,7 @@ class Ui_UniLog(object):
         UniLog.setWindowTitle(_translate("UniLog", "UniLog"))
         self.Uploadbtn.setText(_translate("UniLog", "Upload Log"))
         self.ListenFolder.setText("Listen Folder")
+        self.Missing_Count.setText(str(ISMIS))
 
 class UniLogApp(QMainWindow, Ui_UniLog):
     def __init__(self):
@@ -83,7 +95,21 @@ class UniLogApp(QMainWindow, Ui_UniLog):
         file_dialog = QFileDialog()
         file_path, _ = file_dialog.getOpenFileName(None, "Select Log File", "", "Text Files (*.txt);;All Files (*)", options=options)
         if file_path:
-            cheker.process_log_file(file_path)
+            process_log_file(file_path)
+            self.update_ui()
+
+    def update_ui(self):
+        self.Missing_Count.setText(str(ISMIS))
+
+def process_log_file(file_path):
+    global ISMIS
+    with open(file_path, "r") as file:
+        lines = file.readlines()  # Читаем все строки из файла
+        for line in lines:
+            # Проверяем, содержит ли строка "is missing!"
+            if "is missing!" in line:
+                ISMIS += 1  # Увеличиваем счетчик ISMIS на 1
+
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
