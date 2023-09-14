@@ -113,10 +113,6 @@ class UniLogApp(QMainWindow, Ui_UniLog):
         """Проверка значения ISMIS и обновление интерфейса"""
         if ISMIS > 0:
             self.update_ui()
-            print('ISMIS сейчас:', ISMIS)
-        else:
-            print('ISMIS сейчас:', ISMIS)
-            print('меньше')
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
