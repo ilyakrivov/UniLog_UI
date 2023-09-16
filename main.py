@@ -1,68 +1,109 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog 
+from PyQt5.QtGui import QPixmap, QIcon
 
 
 ISMIS = 0
 matching_lines = []
 
+
 class Ui_UniLog(object):
     def setupUi(self, UniLog):
-        # Настройки окна
         UniLog.setObjectName("UniLog")
         UniLog.setEnabled(True)
         UniLog.resize(900, 250)
         UniLog.setMinimumSize(QtCore.QSize(900, 250))
         UniLog.setMaximumSize(QtCore.QSize(900, 250))
-        
-        # Создание центрального виджета
         self.centralwidget = QtWidgets.QWidget(UniLog)
         self.centralwidget.setObjectName("centralwidget")
-        
-        # Добавление фоновых изображений и настройка элементов интерфейса
+        self.Warning = QtWidgets.QLabel(self.centralwidget)
+        self.Warning.setGeometry(QtCore.QRect(270, 70, 91, 61))
+        font = QtGui.QFont()
+        font.setFamily("Inder")
+        font.setPointSize(29)
+        self.Warning.setFont(font)
+        self.Warning.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.Warning.setStyleSheet("color: rgb(210, 224, 255);")
+        self.Warning.setAlignment(QtCore.Qt.AlignCenter)
+        self.Warning.setObjectName("Warning")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(0, 0, 901, 581))
+        self.label.setGeometry(QtCore.QRect(0, 0, 921, 251))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("image/Main.png"))
+        self.label.setPixmap(QtGui.QPixmap("D:/Python/Repositories/UniLog_UI/Image/main2.png"))
         self.label.setObjectName("label")
-        
-        self.label2 = QtWidgets.QLabel(self.centralwidget)
-        self.label2.setGeometry(QtCore.QRect(240, 20, 141, 171))
-        self.label2.setText("")
-        self.label2.setPixmap(QtGui.QPixmap("image/MissFile.png"))
-        self.label2.setObjectName("label2")
-        
-        self.Uploadbtn = QtWidgets.QPushButton(self.centralwidget)
-        self.Uploadbtn.setEnabled(True)
-        self.Uploadbtn.setGeometry(QtCore.QRect(20, 120, 171, 31))
-        self.set_button_style(self.Uploadbtn)
-        self.Uploadbtn.setObjectName("Uploadbtn")
-        self.Uploadbtn.clicked.connect(self.upload_log)  # Привязка функции к кнопке
-        
-        self.ListenFolder = QtWidgets.QPushButton(self.centralwidget)
-        self.ListenFolder.setEnabled(True)
-        self.ListenFolder.setGeometry(QtCore.QRect(20, 160, 171, 31))
-        self.set_button_style(self.ListenFolder)
-        self.ListenFolder.setObjectName("ListenFolder")
-        
+        self.Not_Found = QtWidgets.QLabel(self.centralwidget)
+        self.Not_Found.setGeometry(QtCore.QRect(430, 70, 91, 61))
+        font = QtGui.QFont()
+        font.setFamily("Inder")
+        font.setPointSize(29)
+        self.Not_Found.setFont(font)
+        self.Not_Found.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.Not_Found.setStyleSheet("color: rgb(210, 224, 255);")
+        self.Not_Found.setAlignment(QtCore.Qt.AlignCenter)
+        self.Not_Found.setObjectName("Not_Found")
+        self.Failed = QtWidgets.QLabel(self.centralwidget)
+        self.Failed.setGeometry(QtCore.QRect(600, 70, 91, 61))
+        font = QtGui.QFont()
+        font.setFamily("Inder")
+        font.setPointSize(29)
+        self.Failed.setFont(font)
+        self.Failed.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.Failed.setStyleSheet("color: rgb(210, 224, 255);")
+        self.Failed.setAlignment(QtCore.Qt.AlignCenter)
+        self.Failed.setObjectName("Failed")
         self.Missing_Count = QtWidgets.QLabel(self.centralwidget)
-        self.Missing_Count.setGeometry(QtCore.QRect(260, 100, 101, 61))
-        self.set_label_style(self.Missing_Count)
-        self.Missing_Count.setObjectName("Missing_Count")
+        self.Missing_Count.setGeometry(QtCore.QRect(760, 70, 91, 61))
+        font = QtGui.QFont()
+        font.setFamily("Inder")
+        font.setPointSize(29)
+        self.Missing_Count.setFont(font)
+        self.Missing_Count.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.Missing_Count.setStyleSheet("color: rgb(210, 224, 255);")
         self.Missing_Count.setAlignment(QtCore.Qt.AlignCenter)
-        
+        self.Missing_Count.setObjectName("Missing_Count")
+
+        #кнопка upload_log
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(20, 20, 171, 41))
+        self.pushButton.setStyleSheet("border: 2px solid rgba(80, 101, 124, 0.6);\n"
+"border-radius: 20px;\n"
+"color: rgb(210, 224, 255);\n"
+"font: 14pt \"Inder\";")
+        self.pushButton.setObjectName("upload")
+        self.pushButton.clicked.connect(self.upload_log)  # Привязка функции к кнопке
+
+        #кнопка convert_log
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(20, 80, 171, 41))
+        self.pushButton_2.setStyleSheet("border: 2px solid rgba(80, 101, 124, 0.6);\n"
+"border-radius: 20px;\n"
+"color: rgb(210, 224, 255);\n"
+"font: 14pt \"Inder\";")
+        self.pushButton_2.setObjectName("convert")
+        self.label.raise_()
+        self.Warning.raise_()
+        self.Not_Found.raise_()
+        self.Failed.raise_()
         self.Missing_Count.raise_()
+        self.pushButton.raise_()
+        self.pushButton_2.raise_()
         UniLog.setCentralWidget(self.centralwidget)
+
         self.retranslateUi(UniLog)
         QtCore.QMetaObject.connectSlotsByName(UniLog)
 
     def retranslateUi(self, UniLog):
         _translate = QtCore.QCoreApplication.translate
         UniLog.setWindowTitle(_translate("UniLog", "UniLog"))
-        self.Uploadbtn.setText(_translate("UniLog", "Upload Log"))
-        self.ListenFolder.setText(_translate("UniLog", "Listen Folder"))
+        self.Warning.setText(_translate("UniLog", "0"))
+        self.Not_Found.setText(_translate("UniLog", "0"))
+        self.Failed.setText(_translate("UniLog", "0"))
+        self.Missing_Count.setText(_translate("UniLog", "0"))
+        self.pushButton.setText(_translate("UniLog", "Upload log"))
+        self.pushButton_2.setText(_translate("UniLog", "Convert log"))
         self.update_ui()  # Обновляем интерфейс
-
+    
     def set_button_style(self, button):
         """Установка стиля для кнопки"""
         button.setFont(QtGui.QFont("Inder", 16))
