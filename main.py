@@ -4,9 +4,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 from PyQt5.QtGui import QPixmap, QIcon
 
 
-ISMIS = 0
-matching_lines = []
+notfound_lines = []
+missing_lines = []
+warning_lines = []
+failed_lines = []
 
+miss_file = 0
+warning = 0
+not_found = 0
+failed = 0
 
 class Ui_UniLog(object):
     def setupUi(self, UniLog):
@@ -122,7 +128,10 @@ class Ui_UniLog(object):
 
     def update_ui(self):
         """Обновление значения ISMIS в интерфейсе"""
-        self.Missing_Count.setText(str(ISMIS))
+        self.Missing_Count.setText(str(miss_file))
+        self.Warning.setText(str(warning))
+        self.Not_Found.setText(str(not_found))
+        self.Failed.setText(str(failed))
 
     def upload_log(self):
         """Обработчик нажатия на кнопку Upload Log"""
@@ -137,15 +146,35 @@ class Ui_UniLog(object):
             self.update_ui()
 
     def process_log_file(self, file_path):
-        """Обработка лог-файла для подсчета ISMIS"""
-        global ISMIS
+        """Обработка лог-файла"""
+
         with open(file_path, "r") as file:
             lines = file.readlines()
+
+            global miss_file
+            global warning
+            global not_found
+            global failed
+
             for line in lines:
                 if "is missing!" in line:
-                    ISMIS += 1
-                    matching_lines.append(line)
-                    print('Потерянные файлы: ' , matching_lines)
+                    miss_file += 1
+                    missing_lines.append(line)
+                    print('Потерянные файлы: ' , missing_lines)
+                if "WARNING:" in line:
+                    warning += 1
+                    warning_lines.append(line)
+                    print('Предупреждение: ' , warning_lines)
+                if "not found" in line:
+                    not_found += 1
+                    notfound_lines.append(line)
+                    print('Файл не найден: ' , notfound_lines)
+                if "Failed" in line:
+                    failed += 1
+                    notfound_lines.append(line)
+                    print('Ошибка : ' , failed_lines)
+
+
 
 class UniLogApp(QMainWindow, Ui_UniLog):
     def __init__(self):
@@ -153,9 +182,10 @@ class UniLogApp(QMainWindow, Ui_UniLog):
         self.setupUi(self)
         self.check_value()
 
+
     def check_value(self):
-        """Проверка значения ISMIS и обновление интерфейса"""
-        if ISMIS > 0:
+        #Проверка для обновления UI
+        if miss_file > 0:
             self.update_ui()
 
 if __name__ == "__main__":
