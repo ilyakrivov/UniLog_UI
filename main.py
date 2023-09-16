@@ -2,17 +2,18 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 
-# Глобальная переменная для подсчета ISMIS
+
 ISMIS = 0
+matching_lines = []
 
 class Ui_UniLog(object):
     def setupUi(self, UniLog):
         # Настройки окна
         UniLog.setObjectName("UniLog")
         UniLog.setEnabled(True)
-        UniLog.resize(900, 600)
-        UniLog.setMinimumSize(QtCore.QSize(900, 600))
-        UniLog.setMaximumSize(QtCore.QSize(900, 600))
+        UniLog.resize(900, 250)
+        UniLog.setMinimumSize(QtCore.QSize(900, 250))
+        UniLog.setMaximumSize(QtCore.QSize(900, 250))
         
         # Создание центрального виджета
         self.centralwidget = QtWidgets.QWidget(UniLog)
@@ -60,7 +61,7 @@ class Ui_UniLog(object):
         UniLog.setWindowTitle(_translate("UniLog", "UniLog"))
         self.Uploadbtn.setText(_translate("UniLog", "Upload Log"))
         self.ListenFolder.setText(_translate("UniLog", "Listen Folder"))
-        self.update_ui()  # Обновляем значение ISMIS в интерфейсе
+        self.update_ui()  # Обновляем интерфейс
 
     def set_button_style(self, button):
         """Установка стиля для кнопки"""
@@ -102,6 +103,8 @@ class Ui_UniLog(object):
             for line in lines:
                 if "is missing!" in line:
                     ISMIS += 1
+                    matching_lines.append(line)
+                    print('Потерянные файлы: ' , matching_lines)
 
 class UniLogApp(QMainWindow, Ui_UniLog):
     def __init__(self):
